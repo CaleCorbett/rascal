@@ -9,8 +9,8 @@ final class KeyboardPane: NSViewController, NSTableViewDataSource, NSTableViewDe
     private let search = NSSearchField()
     private let table = NSTableView()
     private let scroll = NSScrollView()
-    private var actions: [Action] = ActionRegistry.allIncludingPlugins()
-    private var filtered: [Action] = ActionRegistry.allIncludingPlugins()
+    private var actions: [Action] = ActionRegistry.all
+    private var filtered: [Action] = ActionRegistry.all
 
     override func loadView() {
         let root = NSView(frame: NSRect(x: 0, y: 0, width: 560, height: 460))
@@ -92,7 +92,7 @@ final class KeyboardPane: NSViewController, NSTableViewDataSource, NSTableViewDe
         if let w = view.window {
             alert.beginSheetModal(for: w) { resp in
                 guard resp == .alertFirstButtonReturn else { return }
-                for a in ActionRegistry.allIncludingPlugins() { ActionRegistry.setShortcut(nil, forId: a.id) }
+                for a in ActionRegistry.all { ActionRegistry.setShortcut(nil, forId: a.id) }
                 self.table.reloadData()
             }
         }
@@ -303,7 +303,7 @@ final class HotbarPane: NSViewController, NSTableViewDataSource, NSTableViewDele
     @objc private func toggleShowHotbar(_ s: NSButton) { Settings.showHotbar = s.state == .on }
 
     private func availableActions() -> [Action] {
-        ActionRegistry.allIncludingPlugins().filter { !ids.contains($0.id) }
+        ActionRegistry.all.filter { !ids.contains($0.id) }
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
     }
     private func rebuildAddPopup() {
@@ -522,18 +522,6 @@ final class AdvancedPane: SettingsPane {
         hint.preferredMaxLayoutWidth = 380
         addRow("", hint)
 
-        let pluginsBtn = NSButton(title: "Reveal Plugins Folder", target: self, action: #selector(revealPlugins))
-        pluginsBtn.bezelStyle = .rounded
-        addRow("Plugins:", pluginsBtn)
-
-        let reloadBtn = NSButton(title: "Reload Plugins", target: self, action: #selector(reloadPlugins))
-        reloadBtn.bezelStyle = .rounded
-        addRow("", reloadBtn)
-
-        let exampleBtn = NSButton(title: "Install Example Plugin", target: self, action: #selector(installExamplePlugin))
-        exampleBtn.bezelStyle = .rounded
-        addRow("", exampleBtn)
-
         let resetBtn = NSButton(title: "Reset General & Appearance", target: self, action: #selector(resetSettings))
         resetBtn.bezelStyle = .rounded
         addRow("Settings:", resetBtn)
@@ -547,57 +535,6 @@ final class AdvancedPane: SettingsPane {
 
     @objc private func vimChanged(_ s: NSButton) { VimMode.shared.setEnabled(s.state == .on) }
 
-    @objc private func revealPlugins() {
-        let dir = PluginHost.pluginsDirectory
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        NSWorkspace.shared.activateFileViewerSelecting([dir])
-    }
-    @objc private func reloadPlugins() {
-        PluginHost.shared.loadAll()
-        // Rebuild the menu so new plugin actions get menu items + key equivalents
-        // and removed ones drop out (AppDelegate rebuilds on this notification).
-        NotificationCenter.default.post(name: ActionRegistry.shortcutsDidChange, object: nil)
-        guard let w = view.window else { return }
-        let host = PluginHost.shared
-        let a = NSAlert()
-        a.messageText = "Plugins reloaded"
-        var info = "\(host.plugins.count) plugin(s) loaded."
-        if !host.failures.isEmpty {
-            a.alertStyle = .warning
-            let lines = host.failures.map { "• \($0.bundle): \($0.reason)" }.joined(separator: "\n")
-            info += "\n\n\(host.failures.count) failed to load:\n\(lines)"
-        }
-        a.informativeText = info
-        a.beginSheetModal(for: w, completionHandler: { _ in })
-    }
-
-    @objc private func installExamplePlugin() {
-        let existed = FileManager.default.fileExists(
-            atPath: PluginHost.pluginsDirectory.appendingPathComponent("word-count.ftplugin").path)
-        let url = PluginHost.installExample()
-        PluginHost.shared.loadAll()
-        NotificationCenter.default.post(name: ActionRegistry.shortcutsDidChange, object: nil)
-        guard let w = view.window else { return }
-        let a = NSAlert()
-        if let url {
-            a.messageText = existed ? "Example plugin already installed" : "Example plugin installed"
-            a.informativeText = existed
-                ? "“Word Count” is already in your Plugins folder. Select text files and run “Count Words in Selection” from the Command Palette (⌘⇧P)."
-                : "Added “Word Count” to your Plugins folder. Select one or more text files, then run “Count Words in Selection” from the Command Palette (⌘⇧P). Edit its main.js to learn the API."
-            a.addButton(withTitle: "OK")
-            a.addButton(withTitle: "Reveal in Finder")
-            a.beginSheetModal(for: w) { resp in
-                if resp == .alertSecondButtonReturn {
-                    NSWorkspace.shared.activateFileViewerSelecting([url])
-                }
-            }
-        } else {
-            a.alertStyle = .warning
-            a.messageText = "Couldn’t install the example plugin"
-            a.informativeText = "Check that the Plugins folder is writable."
-            a.beginSheetModal(for: w, completionHandler: { _ in })
-        }
-    }
     @objc private func resetSettings() {
         Settings.resetGeneralAndAppearance()
         // Rebuild the pane to reflect defaults.

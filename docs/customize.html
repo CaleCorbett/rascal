@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rascal — Customizing Rascal (themes, plugins &amp; settings)</title>
-<meta name="description" content="Make Rascal yours: tune appearance and shortcuts in Settings, craft a theme from a single JSON file, and add commands with a tiny JavaScript plugin. No build tools, no accounts." />
+<title>Rascal — Customizing Rascal (themes &amp; settings)</title>
+<meta name="description" content="Make Rascal yours: tune appearance and shortcuts in Settings, and craft a theme from a single JSON file. No build tools, no accounts." />
 <link rel="icon" type="image/svg+xml" href="assets/rascal-logo.svg" />
 <meta property="og:title" content="Rascal — Customizing Rascal" />
-<meta property="og:description" content="Settings, themes and plugins — the Rascal customization guide." />
+<meta property="og:description" content="Settings and themes — the Rascal customization guide." />
 <meta property="og:type" content="article" />
   <script type="module" crossorigin src="./assets/style-BCcsVSlE.js"></script>
   <script type="module" crossorigin src="./assets/guide-Cop2rh03.js"></script>
@@ -35,9 +35,8 @@
     <p class="eyebrow">the customization guide</p>
     <h1 class="guide-title">Make it <em>yours</em>.</h1>
     <p class="guide-sub">
-      Tune the look and the keys in Settings, paint every panel with a theme written
-      in plain JSON, and teach Rascal new tricks with a tiny JavaScript plugin — no
-      build tools, no accounts. New here? Start with the
+      Tune the look and the keys in Settings, and paint every panel with a theme written
+      in plain JSON — no build tools, no accounts. New here? Start with the
       <a class="link" href="guide.html">user guide</a> first.
     </p>
   </section>
@@ -52,10 +51,6 @@
       <a href="#themes">Themes</a>
       <a href="#theme-fields" class="toc-sub">The fields</a>
       <a href="#theme-example" class="toc-sub">Worked example</a>
-      <a href="#plugins">Plugins</a>
-      <a href="#plugin-anatomy" class="toc-sub">Anatomy</a>
-      <a href="#ft-api" class="toc-sub">The ft API</a>
-      <a href="#plugin-example" class="toc-sub">Worked example</a>
     </aside>
 
     <article class="doc">
@@ -79,7 +74,7 @@
         <h3 id="keys-chrome">Keys &amp; chrome</h3>
         <ul>
           <li><strong>Keyboard</strong> — every command is rebindable in <strong>Settings ▸ Keyboard</strong>, with live conflict detection. The full default list is in <a class="link" href="https://github.com/chang-07/rascal/blob/main/HOTKEYS.md">HOTKEYS.md</a>.</li>
-          <li><strong>Hotbar</strong> — curate the per-pane toolbar of one-click actions in <strong>Settings ▸ Hotbar</strong>; drop your favourite commands (and plugin actions) right where you want them.</li>
+          <li><strong>Hotbar</strong> — curate the per-pane toolbar of one-click actions in <strong>Settings ▸ Hotbar</strong>; drop your favourite commands right where you want them.</li>
           <li><strong>Chrome</strong> — hide the toolbar and title bar for a quiet, content-first window, and toggle the sidebar with <kbd>⌥⌘S</kbd>.</li>
           <li><strong>Vim mode</strong> — flip on modal navigation and drive with <code>hjkl</code>, <code>/</code>, <code>dd</code>, <code>gg</code>, <code>G</code>.</li>
         </ul>
@@ -156,91 +151,6 @@
         </ol>
         <div class="callout">
           <p>Don&rsquo;t start from scratch — <strong>View ▸ Theme ▸ Export Current Theme…</strong> writes the active theme into the folder as editable JSON. Because a matching <code>id</code> overrides a built-in, you can tweak a copy of <em>Rascal Light</em> and keep its name. Accent color, density, and font size from Settings layer on top of any theme.</p>
-        </div>
-      </section>
-
-      <!-- ═══════════════ PLUGINS ═══════════════ -->
-      <section class="doc-section" id="plugins">
-        <h2>Writing a <em>plugin</em></h2>
-        <p class="lede">
-          A Rascal plugin is a tiny folder of JavaScript that adds new commands to
-          the app. No build step, no npm, no compiling — write a <code>.js</code> file,
-          drop it in a folder, reload. Each plugin runs in its own JavaScriptCore
-          context with a small <code>ft</code> bridge to the file manager.
-        </p>
-
-        <h3 id="plugin-anatomy">Anatomy of a plugin</h3>
-        <p>
-          A plugin is a folder named <code>&lt;anything&gt;.ftplugin</code> containing exactly
-          two files — a manifest and a script:
-        </p>
-        <div class="file-label">~/Library/Application Support/FinderTwo/Plugins/</div>
-        <pre><code>quick-notes.ftplugin/
-├─ manifest.json   <span class="cm"># id, name, and the actions it contributes</span>
-└─ main.js         <span class="cm"># the code, run once when Rascal loads</span></code></pre>
-        <p>
-          The <strong>manifest</strong> declares the plugin&rsquo;s identity and the actions it adds.
-          Each action&rsquo;s <code>id</code> is what your script hooks into; its <code>title</code> is
-          what the user sees in the Command Palette and the Plugins menu.
-        </p>
-        <div class="file-label">manifest.json</div>
-        <pre><code>{
-  <span class="k">"id"</span>:      <span class="s">"dev.you.quick-notes"</span>,
-  <span class="k">"name"</span>:    <span class="s">"Quick Notes"</span>,
-  <span class="k">"version"</span>: <span class="s">"1.0"</span>,
-  <span class="k">"actions"</span>: [
-    { <span class="k">"id"</span>: <span class="s">"notes.new-dated"</span>, <span class="k">"title"</span>: <span class="s">"New Dated Note"</span> }
-  ]
-}</code></pre>
-
-        <h3 id="ft-api">The <code>ft</code> API</h3>
-        <p>
-          Inside <code>main.js</code> the host exposes a global <code>ft</code> object. Register
-          a handler for each action with <code>ft.onAction</code> — it&rsquo;s called with an
-          array of the currently selected file paths whenever the user runs that command.
-        </p>
-        <table class="tbl">
-          <thead><tr><th>Function</th><th>What it does</th></tr></thead>
-          <tbody>
-            <tr><td><code>ft.onAction(id, fn)</code></td><td>Register a handler. <code>fn(paths)</code> receives an array of selected file paths.</td></tr>
-            <tr><td><code>ft.selectedURLs()</code></td><td>Returns the selected paths as an array of strings.</td></tr>
-            <tr><td><code>ft.currentURL()</code></td><td>Returns the active pane&rsquo;s current folder path.</td></tr>
-            <tr><td><code>ft.readFile(path)</code></td><td>Reads a file, returns its text (or <code>null</code>).</td></tr>
-            <tr><td><code>ft.writeFile(path, text)</code></td><td>Writes text to a file, returns <code>true</code> on success.</td></tr>
-            <tr><td><code>ft.run([cmd, …args])</code></td><td>Runs a program and returns its stdout as a string.</td></tr>
-            <tr><td><code>ft.notify(message)</code></td><td>Flashes a message in the active window&rsquo;s status bar.</td></tr>
-          </tbody>
-        </table>
-
-        <h3 id="plugin-example">A complete example</h3>
-        <p>
-          Here&rsquo;s a working plugin that drops a dated Markdown note into whatever
-          folder you&rsquo;re viewing. It uses three of the bridge calls — read the current
-          folder, write a file, and confirm:
-        </p>
-        <div class="file-label">main.js</div>
-        <pre><code>ft.onAction(<span class="s">'notes.new-dated'</span>, <span class="k">function</span> (paths) {
-  <span class="k">var</span> dir = ft.currentURL();
-  <span class="k">if</span> (!dir) { ft.notify(<span class="s">'Open a folder first'</span>); <span class="k">return</span>; }
-
-  <span class="cm">// YYYY-MM-DD using the JS Date</span>
-  <span class="k">var</span> d = <span class="k">new</span> Date();
-  <span class="k">var</span> pad = <span class="k">function</span> (n) { <span class="k">return</span> (<span class="s">'0'</span> + n).slice(-2); };
-  <span class="k">var</span> stamp = d.getFullYear() + <span class="s">'-'</span> + pad(d.getMonth() + 1) + <span class="s">'-'</span> + pad(d.getDate());
-
-  <span class="k">var</span> path = dir + <span class="s">'/'</span> + stamp + <span class="s">'-note.md'</span>;
-  ft.writeFile(path, <span class="s">'# '</span> + stamp + <span class="s">'\n\n'</span>);
-  ft.notify(<span class="s">'Created '</span> + stamp + <span class="s">'-note.md'</span>);
-});</code></pre>
-        <p>Save the two files into the plugin folder, then:</p>
-        <ol class="steps">
-          <li>Open <strong>Settings ▸ Advanced</strong> and click <strong>Reveal Plugins Folder</strong> — it opens <code>~/Library/Application Support/FinderTwo/Plugins/</code>. Put <code>quick-notes.ftplugin</code> there.</li>
-          <li>Back in Settings, click <strong>Reload Plugins</strong> (or just relaunch Rascal).</li>
-          <li>Run it: press <kbd>⌘⇧P</kbd> and type <strong>New Dated Note</strong>, or pick it from the <strong>Plugins</strong> menu.</li>
-          <li>Want it on a key? Give it a shortcut in <strong>Settings ▸ Keyboard</strong>, or add it to a pane&rsquo;s toolbar in <strong>Settings ▸ Hotbar</strong>.</li>
-        </ol>
-        <div class="callout">
-          <p><strong>A note on trust.</strong> Plugins run in-process with your full permissions — they can read and write files and launch programs (<code>ft.run</code>). There&rsquo;s no sandbox, so only add plugins you&rsquo;ve read and trust, exactly as you would a shell script.</p>
         </div>
       </section>
 
