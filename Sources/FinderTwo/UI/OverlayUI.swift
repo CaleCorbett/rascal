@@ -45,6 +45,18 @@ enum OverlayUI {
         return p
     }
 
+    /// Center the overlay over its parent and fade it in, instead of a bare
+    /// makeKeyAndOrderFront, so the finders get a quick, soft entrance.
+    static func present(_ panel: NSWindow, over parent: NSWindow?) {
+        center(panel, over: parent)
+        panel.alphaValue = 0
+        panel.makeKeyAndOrderFront(nil)
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.12
+            panel.animator().alphaValue = 1
+        }
+    }
+
     /// Position a floating finder over its parent window instead of the screen,
     /// so the palette / Find Files / Search Contents appear on the window the
     /// user is actually using (matters most with multiple windows or displays).
