@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rascal — Privacy Policy</title>
+<meta name="description" content="Rascal runs entirely on your Mac. It has no telemetry, no analytics, no accounts, and no cloud — it collects nothing. Here are the details." />
+<link rel="icon" type="image/svg+xml" href="assets/rascal-logo.svg" />
+<meta property="og:title" content="Rascal — Privacy Policy" />
+<meta property="og:description" content="Local-first by design: Rascal collects nothing and phones home to no one." />
+<meta property="og:type" content="article" />
+<script type="module" src="/src/guide.js"></script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="Rascal home">
+    <img src="assets/rascal-logo.svg" alt="" class="brand-mark" />
+    <span class="brand-name">Rascal</span>
+  </a>
+  <nav class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#demos">Demos</a>
+    <a href="guide.html">Guide</a>
+    <a href="customize.html">Customize</a>
+    <a class="nav-cta" href="https://github.com/chang-07/rascal/releases/latest/download/Rascal-arm64.dmg">Download</a>
+  </nav>
+</header>
+
+<main>
+  <section class="guide-hero">
+    <p class="eyebrow">the legal bit</p>
+    <h1 class="guide-title">Privacy <em>Policy</em></h1>
+    <p class="guide-sub">
+      Short version: Rascal runs entirely on your Mac. It collects nothing, sends nothing,
+      and has no account to sign into. The details are below.
+    </p>
+    <p class="eyebrow" style="margin-top:18px">Last updated · 23 June 2026</p>
+  </section>
+
+  <div class="guide-layout">
+    <aside class="toc" aria-label="On this page">
+      <h4>On this page</h4>
+      <a href="#app">What Rascal collects</a>
+      <a href="#website">This website</a>
+      <a href="#downloads">Downloads &amp; links</a>
+      <a href="#choices">Your data &amp; choices</a>
+      <a href="#changes">Changes</a>
+      <a href="#contact">Contact</a>
+    </aside>
+
+    <article class="doc">
+
+      <section class="doc-section" id="app">
+        <h2>What Rascal <em>collects</em></h2>
+        <p class="lede">
+          Nothing. Rascal is a local-first macOS app — no analytics, no telemetry, no accounts,
+          and no servers of ours to talk to. Everything you do stays on your Mac.
+        </p>
+        <ul>
+          <li><strong>No tracking.</strong> Rascal doesn&rsquo;t record what you browse, open, rename, or search, and it never sends usage data anywhere.</li>
+          <li><strong>No account.</strong> There is no sign-in, no profile, and no cloud sync — nothing to register and nothing to leak.</li>
+          <li><strong>Local storage only.</strong> Settings, themes, and saved searches live on your Mac under <code>~/Library/Application Support/FinderTwo</code> and the standard macOS preferences. File tags use macOS&rsquo;s own Finder tag system.</li>
+          <li><strong>Connections you start.</strong> Features like the inline terminal, SFTP, and connecting to servers or network shares talk only to the machines <em>you</em> point them at. That data flows directly between your Mac and those servers — never to us — and any credentials are kept in the macOS Keychain.</li>
+        </ul>
+      </section>
+
+      <section class="doc-section" id="website">
+        <h2>This <em>website</em></h2>
+        <p class="lede">
+          The page you&rsquo;re reading is static. It sets no cookies, runs no analytics, and
+          loads no tracking scripts.
+        </p>
+        <ul>
+          <li><strong>No cookies or analytics.</strong> We don&rsquo;t use cookies, pixels, or any analytics or advertising tools.</li>
+          <li><strong>Hosting.</strong> The site is served by GitHub Pages and Cloudflare. Like any web host, they may keep short-lived request logs (such as IP address and browser type) to deliver the site and protect against abuse. That is standard infrastructure logging, handled under <a class="link" href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">GitHub&rsquo;s</a> and <a class="link" href="https://www.cloudflare.com/privacypolicy/">Cloudflare&rsquo;s</a> own privacy policies.</li>
+        </ul>
+      </section>
+
+      <section class="doc-section" id="downloads">
+        <h2>Downloads &amp; <em>links</em></h2>
+        <ul>
+          <li><strong>Downloads.</strong> App downloads are hosted on GitHub Releases — and Homebrew fetches the same files from there. Those requests are covered by GitHub&rsquo;s privacy policy.</li>
+          <li><strong>Links out.</strong> Links to GitHub, Homebrew, and the optional Ko-fi tip page lead to third-party sites with their own privacy policies, which we don&rsquo;t control.</li>
+        </ul>
+      </section>
+
+      <section class="doc-section" id="choices">
+        <h2>Your data &amp; your <em>choices</em></h2>
+        <p class="lede">
+          Because nothing is collected, there is nothing for us to access, share, sell, or delete.
+        </p>
+        <ul>
+          <li><strong>You&rsquo;re in control.</strong> All Rascal data lives on your Mac; you can inspect or remove it any time.</li>
+          <li><strong>Uninstalling.</strong> Drag Rascal to the Trash. To remove its local data too, delete <code>~/Library/Application Support/FinderTwo</code> and <code>~/Library/Preferences/dev.chang.FinderTwo.plist</code> — or run <code>brew uninstall --zap --cask rascal</code>, which does it for you.</li>
+        </ul>
+      </section>
+
+      <section class="doc-section" id="changes">
+        <h2>Changes</h2>
+        <p>
+          If this policy changes, the date at the top will change with it, and the full
+          history is public in the <a class="link" href="https://github.com/chang-07/rascal">project repository</a>.
+        </p>
+      </section>
+
+      <section class="doc-section" id="contact">
+        <h2>Contact</h2>
+        <p>
+          Questions about privacy? <a class="link" href="https://github.com/chang-07/rascal/issues">Open an issue on GitHub</a> and we&rsquo;ll answer there.
+        </p>
+      </section>
+
+    </article>
+  </div>
+
+  <p class="guide-foot-cta">
+    <a class="btn btn-ghost btn-lg" href="index.html">← Back to home</a>
+  </p>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <img src="assets/rascal-logo.svg" alt="" class="foot-mark" />
+    <span>Rascal</span>
+  </div>
+  <nav class="foot-links">
+    <a href="https://github.com/chang-07/rascal" target="_blank" rel="noopener">GitHub</a>
+    <a href="guide.html">Guide</a>
+    <a href="customize.html">Customize</a>
+    <a href="https://ko-fi.com/chang07" target="_blank" rel="noopener">Ko-fi</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </nav>
+  <p class="foot-note">Made on a Mac, for Macs. No cloud, no account, no nonsense.</p>
+</footer>
+
+</body>
+</html>

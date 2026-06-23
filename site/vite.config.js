@@ -18,6 +18,8 @@ export default defineConfig({
         main: entry('./index.html'),
         guide: entry('./guide.html'),
         customize: entry('./customize.html'),
+        privacy: entry('./privacy.html'),
+        terms: entry('./terms.html'),
       },
     },
   }
