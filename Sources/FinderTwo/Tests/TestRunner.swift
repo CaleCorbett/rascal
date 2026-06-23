@@ -1586,12 +1586,6 @@ final class TestRunner {
         assert("action: project.open-editor",
                ActionRegistry.action(id: "project.open-editor") != nil, "missing")
 
-        // --- T47: ActionRegistry plugin extension API exists ---
-        ActionRegistry.registerPluginAction(id: "test.plugin.action", title: "Plugin Test", perform: { _ in })
-        assert("plugin action lookup works",
-               ActionRegistry.action(id: "test.plugin.action")?.title == "Plugin Test",
-               "missing")
-
         // --- T41: New actions registered ---
         assert("action: file.copy-path",
                ActionRegistry.action(id: "file.copy-path") != nil, "missing")
@@ -2253,41 +2247,6 @@ final class TestRunner {
         assert("shortcutsDidChange posted", notified, "no notification")
         NotificationCenter.default.removeObserver(scToken)
         ActionRegistry.setShortcut(nil, forId: "tab.new")
-
-        // --- T59b: plugin round-trip — load a real .ftplugin and fire its
-        // action, verifying the JS handler actually runs (regression guard for
-        // the empty-snapshot handler bug).
-        let pluginDir = sandbox.appendingPathComponent("echo.ftplugin")
-        try? FileManager.default.createDirectory(at: pluginDir, withIntermediateDirectories: true)
-        let firedMarker = sandbox.appendingPathComponent("plugin_fired.txt").path
-        let manifest = """
-        {"id":"test.echo","name":"Echo","version":"1.0",
-         "actions":[{"id":"test.echo.run","title":"Echo Run"}]}
-        """
-        let js = """
-        ft.onAction('test.echo.run', function(urls) {
-            ft.writeFile('\(firedMarker)', 'fired:' + urls.length);
-        });
-        """
-        try? manifest.write(to: pluginDir.appendingPathComponent("manifest.json"),
-                            atomically: true, encoding: .utf8)
-        try? js.write(to: pluginDir.appendingPathComponent("main.js"),
-                     atomically: true, encoding: .utf8)
-        PluginHost.shared.testLoad(at: pluginDir)
-        assert("plugin action registered in ActionRegistry",
-               ActionRegistry.action(id: "test.echo.run") != nil, "missing")
-        PluginHost.shared.fireAction(id: "test.echo.run", wc: wc)
-        wait(0.1)
-        assert("plugin JS handler actually ran (wrote marker file)",
-               FileManager.default.fileExists(atPath: firedMarker),
-               "handler never fired — empty-snapshot bug regressed")
-        // Plugin actions must be reachable by the user — verify the loaded
-        // action surfaces in the command palette's entry list (regression
-        // guard: the palette read ActionRegistry.all, which omits plugins).
-        let echoInPalette = CommandPaletteController.testEntries(for: wc)
-            .contains { $0.title == "Echo Run" }
-        assert("plugin action surfaces in command palette",
-               echoInPalette, "plugin action not in palette — user can't trigger it")
 
         // --- T60: construct every sheet/window controller (catches layout +
         // constraint crashes that off-screen menu tests miss). We force

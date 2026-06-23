@@ -2,7 +2,7 @@
 
 ![Rascal, a keyboard-first Finder replacement for macOS](media/rascal-banner.png)
 
-Rascal is a Finder replacement for macOS, built for people who'd rather not reach for the mouse. It has dual panes, a fuzzy command palette, vim keys, a live disk treemap, real Finder tags, an inline terminal, and a small JavaScript plugin API. It's plain AppKit, it launches fast, and it runs entirely on your Mac.
+Rascal is a Finder replacement for macOS, built for people who'd rather not reach for the mouse. It has dual panes, a fuzzy command palette, vim keys, a live disk treemap, real Finder tags, and an inline terminal. It's plain AppKit, it launches fast, and it runs entirely on your Mac.
 
 Free and open source. macOS 13 or later, Apple Silicon or Intel.
 
@@ -35,7 +35,6 @@ Or build it yourself — see below.
 - A live disk treemap. It's a colour-coded map of whatever folder you're in; click a tile to go deeper.
 - Reads and writes the same Finder tags Finder does (`kMDItemUserTags`), and you can pin saved searches to the sidebar as smart folders.
 - An inline terminal drawer (`` ⌘` ``) that stays in sync with the active pane's directory.
-- Plugins are a single JavaScript file. No build step, no npm.
 - 17 themes out of the box, plus your own if you want to write one in JSON.
 - It stays quick on large folders. There are some numbers further down if you care about that sort of thing.
 
@@ -108,7 +107,7 @@ Sources/FinderTwo/                 # the Swift target is named FinderTwo (histor
 
 ## Contributing
 
-Pull requests are welcome: bug fixes, features, themes, plugins, and docs. A few things keep Rascal coherent — please keep them in mind.
+Pull requests are welcome: bug fixes, features, themes, and docs. A few things keep Rascal coherent — please keep them in mind.
 
 ### Principles
 
@@ -141,7 +140,6 @@ macOS 13+ and a Swift 5.9+ toolchain (Command Line Tools are enough). Edit in an
 - **Commands are data.** Add new actions to `Model/Actions.swift` (id, title, default shortcut); they appear in the command palette and menu bar automatically, then handle them in the relevant controller.
 - **Preferences** live under the `FinderTwo.*` `UserDefaults` namespace — keep the prefix.
 - **Themes:** add a `ThemeSpec` to `Theme/ThemeStore.swift` (id, name, appearance, hex colours). Users can also drop a JSON theme in the Themes folder with no rebuild.
-- **Plugins** are JavaScript (`manifest.json` + `main.js` in a `.ftplugin` bundle) — no rebuild required. See the [Customize guide](https://chang-07.github.io/rascal/customize.html).
 - **Don't change** `CFBundleIdentifier` (`dev.chang.FinderTwo`) or the `~/Library/Application Support/FinderTwo` paths — they are load-bearing for granted permissions and existing users' data.
 
 ### Style
@@ -159,7 +157,7 @@ macOS 13+ and a Swift 5.9+ toolchain (Command Line Tools are enough). Edit in an
 ### Where help is wanted
 
 - Git-status overlay polish, a custom keyboard-shortcut editor, 1M-item virtualized scrolling, and inline-preview improvements are all open.
-- New **themes** and **plugins** are low-risk and always welcome.
+- New **themes** are low-risk and always welcome.
 
 ## Performance
 

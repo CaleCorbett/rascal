@@ -211,7 +211,7 @@ A System-Settings-style window with five sections:
 - **Appearance** — theme, accent color (9 choices + System), density (Compact / Comfortable / Spacious → row height), font size (−1…+4 pt), with a **live preview** strip that reflects every change instantly.
 - **Keyboard** — every action with a click-to-record shortcut field. Recording captures the next combo (needs ⌘/⌃/⌥); `⌫` clears, `Esc` cancels. **Conflicts are detected** — reassigning a combo prompts to steal it from the other action. Per-row **Reset** and **Restore All Defaults**. Changes rebuild the menu **live**.
 - **Hotbar** — choose which actions appear in each pane's hotbar; reorder by drag or ↑/↓, add from a popup, remove, or reset.
-- **Advanced** — Vim toggle, reveal/reload the plugins folder, reset General & Appearance.
+- **Advanced** — Vim toggle, reset General & Appearance.
 
 All preferences are plain `UserDefaults` — no account, no cloud.
 
@@ -264,21 +264,6 @@ to keep it, or **Connect** to browse. Authentication uses your existing SSH
 config and agent — Rascal never handles passwords itself. In the browser:
 double-click a folder to drill in, **Up** to go back, **Download…** to fetch a
 file into the active pane's folder.
-
----
-
-## Plugins
-
-Drop a `<name>.ftplugin/` folder in
-`~/Library/Application Support/FinderTwo/Plugins/` containing `manifest.json`
-and `main.js`, then **Settings ▸ Advanced ▸ Reload Plugins** (or relaunch).
-Declared actions become first-class commands: they show up in the **Command
-Palette** (`⌘⇧P`) and a dedicated **Plugins** menu, can be bound to a keyboard
-shortcut (Settings ▸ Keyboard), and can be added to the hotbar. Each action's
-handler receives the current selection as an array of paths. The JS bridge
-exposes: `ft.onAction(id, fn)`, `ft.notify(msg)`, `ft.readFile(path)`,
-`ft.writeFile(path, text)`, `ft.run([cmd, args…])`, `ft.currentURL()`,
-`ft.selectedURLs()`. See the full guide on the website.
 
 ---
 

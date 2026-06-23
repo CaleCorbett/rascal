@@ -473,10 +473,9 @@ enum ActionRegistry {
               defaultShortcut: nil) { $0.openWorkspaceMenu(nil) },
     ]
 
-    /// Find action by stable id. Includes plugin-registered actions.
+    /// Find action by stable id.
     static func action(id: String) -> Action? {
-        if let builtIn = all.first(where: { $0.id == id }) { return builtIn }
-        return allIncludingPlugins().first { $0.id == id }
+        all.first { $0.id == id }
     }
 
     /// Resolved shortcut for an action, honoring user customization stored in
@@ -511,7 +510,7 @@ enum ActionRegistry {
     /// Returns the id of an action already bound to `shortcut`, other than
     /// `excluding`. Used by the editor to flag conflicts before assigning.
     static func conflictingActionId(for target: KeyShortcut, excluding id: String) -> String? {
-        for a in allIncludingPlugins() where a.id != id {
+        for a in all where a.id != id {
             if shortcut(for: a.id) == target { return a.id }
         }
         return nil

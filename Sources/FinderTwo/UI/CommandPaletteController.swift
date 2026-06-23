@@ -22,7 +22,7 @@ final class CommandPaletteController: NSWindowController, NSTextFieldDelegate, N
     /// Test-only: build the entry list using just the data sources (no UI).
     static func testEntries(for wc: BrowserWindowController) -> [Entry] {
         var entries: [Entry] = []
-        for a in ActionRegistry.allIncludingPlugins() {
+        for a in ActionRegistry.all {
             let shortcut = ActionRegistry.shortcut(for: a.id)?.displayLabel ?? ""
             entries.append(Entry(
                 title: a.title,
@@ -154,7 +154,7 @@ final class CommandPaletteController: NSWindowController, NSTextFieldDelegate, N
         let target = self.target
 
         // 1. Actions
-        for a in ActionRegistry.allIncludingPlugins() {
+        for a in ActionRegistry.all {
             let img = a.icon.flatMap { NSImage(systemSymbolName: $0, accessibilityDescription: nil) }
             let shortcut = ActionRegistry.shortcut(for: a.id)?.displayLabel ?? ""
             entries.append(Entry(
